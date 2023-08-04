@@ -2,6 +2,8 @@ import { FieldValues, FormState, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "./App.css";
+import Button from "./components/Button";
+import { useRef, useState } from "react";
 
 enum Category {
   none = "",
@@ -29,12 +31,20 @@ function App() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const handleForm = (data: FieldValues) => console.log(data);
+  const [items, setItems] = useState([]);
+  const descRef = useRef(null);
+
+  const handleForm = (data: FieldValues) => {
+    const newObj = { ...data };
+    setItems([...items, newObj]);
+    reset();
+  };
 
   return (
     <>
@@ -55,7 +65,7 @@ function App() {
             className="form-control"
             type="number"
             id=""
-            {...register("amount")}
+            {...register("amount", { valueAsNumber: true })}
           />
           {errors.amount && <p>{errors.amount.message}</p>}
         </div>
@@ -75,6 +85,43 @@ function App() {
           Submit
         </button>
       </form>
+
+      <div className="mt-5">
+        <select
+          className="form-select mb-3"
+          onClick={(e) => console.log(e.target.value)}
+        >
+          <option value="none">All Categories</option>
+          <option value="groceries">Groceries</option>
+          <option value="utilities">Utilities</option>
+          <option value="entertainment">Entertainment</option>
+        </select>
+
+        {items.length !== 0 && (
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Category</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <tr key={item}>
+                  <td>{item.description}</td>
+                  <td>{item.amount}</td>
+                  <td>{item.category}</td>
+                  <td>
+                    <Button />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </>
   );
 }
