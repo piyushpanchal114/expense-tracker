@@ -46,6 +46,11 @@ function App() {
     reset();
   };
 
+  const handleCategory = (data: HTMLSelectElement) => {
+    console.log("Clicked", data);
+    console.log(data.target.value);
+  };
+
   return (
     <>
       <form className="needs-validation" onSubmit={handleSubmit(handleForm)}>
@@ -87,10 +92,7 @@ function App() {
       </form>
 
       <div className="mt-5">
-        <select
-          className="form-select mb-3"
-          onClick={(e) => console.log(e.target.value)}
-        >
+        <select className="form-select mb-3" onClick={handleCategory}>
           <option value="none">All Categories</option>
           <option value="groceries">Groceries</option>
           <option value="utilities">Utilities</option>
