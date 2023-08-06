@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import "./App.css";
 import Button from "./components/Button";
 import { useRef, useState } from "react";
+import ExpenseList from "./components/expense-tracker/components/ExpenseList";
 
 enum Category {
   none = "",
@@ -28,6 +29,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 function App() {
+  const [expenses, setExpenses] = useState([
+    { id: 1, description: "aaa", amount: 10, category: "entertainment" },
+    { id: 2, description: "bb", amount: 20, category: "entertainment" },
+    { id: 3, description: "aacca", amount: 30, category: "entertainment" },
+    { id: 4, description: "dd", amount: 10, category: "entertainment" },
+  ]);
+
   const {
     register,
     handleSubmit,
@@ -53,7 +61,13 @@ function App() {
 
   return (
     <>
-      <form className="needs-validation" onSubmit={handleSubmit(handleForm)}>
+      <ExpenseList
+        expenses={expenses}
+        onDelete={(id) =>
+          setExpenses(expenses.filter((expense) => expense.id !== id))
+        }
+      />
+      {/* <form className="needs-validation" onSubmit={handleSubmit(handleForm)}>
         <div className="mb-3">
           <label className="form-label" htmlFor="">
             Description
@@ -123,7 +137,7 @@ function App() {
             </tbody>
           </table>
         )}
-      </div>
+      </div> */}
     </>
   );
 }
